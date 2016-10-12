@@ -8,3 +8,4 @@ Programm hoiab uudiseid antud teema kohta. Programm kuvab uudised mugavas formaa
 -uudiste kuvamine
 -uudiste vaatamine arhiivis kuupäeva ja teema järgi
 -andmete otsimine arhiivist
+
