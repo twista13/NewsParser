@@ -15,7 +15,7 @@ import java.util.Locale;
 /**
  * Created by twista on 10.10.16.
  */
-public class Parser {
+public class parser_test {
 
     public static void main(String args[]) throws ParseException {
 

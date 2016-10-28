@@ -1,6 +1,6 @@
 #NewsParser
 
-Programm hoiab uudiseid antud teema kohta. Programm kuvab uudised mugavas formaadis ja ilma reklaamita. Programm võimaldab otsida infot arhiivist.
+Programm hoiab uudiseid antud teema kohta. Programm kuvab uudised mugavas formaadis ja ilma reklaamita. Program salvestab uudised antud kategooriast. Programm võimaldab otsida infot salvestatud arhiivist.
 
 -automaatne uudiste parsimine antud teemal
 
@@ -10,7 +10,7 @@ Programm hoiab uudiseid antud teema kohta. Programm kuvab uudised mugavas formaa
 
 -uudiste kuvamine
 
--uudiste vaatamine arhiivis kuupäeva ja teema järgi
+-uudiste vaatamine arhiivis kuupäeva ja kategooria järgi
 
 -andmete otsimine arhiivist
 
