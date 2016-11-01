@@ -18,6 +18,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by twista on 20.10.16.
@@ -47,6 +48,28 @@ public class ui_test extends Application {
 
         tp1.setText("delfi.ee");
         tp1.setContent(new Button("button"));
+
+        StackPane pane = new StackPane();
+        ArrayList <Hyperlink> hla = new ArrayList<>();
+        for (int i=0; i<3; i++ ){
+            Hyperlink hl = new Hyperlink("link"+i);
+            int finalI = i;
+            hl.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    System.out.println("clicked on link "+finalI);
+                }
+            });
+            hla.add(hl);
+        }
+
+        VBox vb2 = new VBox();
+        vb2.getChildren().addAll(hla);
+        tp2.setContent(vb2);
+
+        bp.setCenter(pane);
+
+
         VBox vb= new VBox();
         ScrollPane sp = new ScrollPane();
         sp.setContent(vb);
