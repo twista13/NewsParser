@@ -3,14 +3,12 @@ package com.newsparser;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
@@ -40,7 +38,7 @@ public class NewsParser extends Application {
     @Override
     public void start(Stage primaryStage) {
         BorderPane bp = new BorderPane();
-        Scene scene = new Scene(bp,800,100);
+        Scene scene = new Scene(bp,800,400);
         ScrollPane sp = new ScrollPane();
         VBox vb = new VBox();
         bp.setLeft(sp);
@@ -59,7 +57,6 @@ public class NewsParser extends Application {
             tp.setText(keyList.get(i));
             tpa.add(tp);
         }
-
         ArrayList<String> tempKeyList = new ArrayList<>(keyList);
         ArrayList<String> tempObjectList= new ArrayList<>(objectList);
         for (int i=0;i<tempKeyList.size(); i++){
@@ -77,6 +74,9 @@ public class NewsParser extends Application {
                 }
                 Hyperlink hl = new Hyperlink(keyList.get(j));
                 String finalObject = object;
+                int finalI = i;
+                ArrayList<String> finalKeyList = keyList;
+                int finalJ = j;
                 hl.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
@@ -87,7 +87,6 @@ public class NewsParser extends Application {
                             Hyperlink temphl = new Hyperlink();
                             temphl.setText(el.text());
                             hyperlinkToArticle.add(temphl);
-                           // articleLinkArray.add(el.attr("href"));
                             temphl.setOnAction(new EventHandler<ActionEvent>() {
                                 @Override
                                 public void handle(ActionEvent event) {
@@ -114,12 +113,21 @@ public class NewsParser extends Application {
                                     }
                                     sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                                     ArticleDate = sdf.format(date);
-                                    Text text = new Text(ArticleDate+"\n"+ArticleTitle+"\n"+ArticleText);
-                                    TextFlow tf = new TextFlow(text);
+
+                                    TextFlow tf0 = new TextFlow(new Text(tempKeyList.get(finalI)+"->"+ finalKeyList.get(finalJ)));
+                                    TextFlow tf1 = new TextFlow(new Text(ArticleDate));
+                                    TextFlow tf2 = new TextFlow(new Text(ArticleTitle));
+                                    TextFlow tf3 = new TextFlow(new Text(ArticleText));
                                     ScrollPane sp = new ScrollPane();
+                                    sp.setContent(tf3);
                                     sp.setFitToWidth(true);
-                                    sp.setContent(tf);
-                                    bp.setCenter(sp);
+
+                                    VBox vb = new VBox();
+                                    vb.getChildren().addAll(tf0,tf1,tf2,tf3,sp);
+
+                                    sp.prefHeightProperty().bind(bp.heightProperty());
+
+                                    bp.setCenter(vb);
                                 }
                             });
                         }
