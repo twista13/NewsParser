@@ -41,8 +41,8 @@ public class NewsParser extends Application {
         Scene scene = new Scene(bp,800,400);
         ScrollPane sp = new ScrollPane();
         VBox vb = new VBox();
-        bp.setLeft(sp);
         sp.setContent(vb);
+        bp.setLeft(sp);
 
         String link;
         link="http://www.delfi.ee";
@@ -62,6 +62,9 @@ public class NewsParser extends Application {
         for (int i=0;i<tempKeyList.size(); i++){
             link= tempObjectList.get(i);
             hm = getCategoriesAndLinks(link);
+            if (hm.size()==0){
+                continue;
+            }
             keyList= new ArrayList<>(hm.keySet());
             ArrayList<Hyperlink> hla = new ArrayList<>();
             for (int j=0; j<keyList.size(); j++) {
@@ -82,6 +85,9 @@ public class NewsParser extends Application {
                     public void handle(ActionEvent event) {
                         Document pageContent = getPageContent(finalObject);
                         Elements articlesData = pageContent.select("a[class=article-title]");
+                        if (articlesData.size()==0) {
+                            articlesData = pageContent.select("a[class=cat3title]");
+                        }
                         ArrayList<Hyperlink> hyperlinkToArticle = new ArrayList();
                         for (Element el : articlesData){
                             Hyperlink temphl = new Hyperlink();
@@ -97,10 +103,15 @@ public class NewsParser extends Application {
                                     String ArticleDate  = pageContent.select("div[class=articleDate]").text();
                                     ArticleTitle= ArticleTitle.replaceAll(" - (\\w*)",".");
                                     ArticleText= ArticleText.replaceAll("Logi sisse kasutades oma Facebooki, Twitteri või Google'i kontot või e-posti aadressi. ","");
-                                    String[] months={"jaanuar","veebruar","märts","aprill","mai","juuni","juuli","august","september","oktoober","november","detsember"};
-                                    for (int i=0; i<months.length; i++){
-                                        if (ArticleDate.contains(months[i])){
-                                            ArticleDate=ArticleDate.replaceAll(". " + months[i] + " ", "." +String.valueOf(i+1)+ ".");
+                                    String[] monthsEE={"jaanuar","veebruar","märts","aprill","mai","juuni","juuli","august","september","oktoober","november","detsember"};
+                                    String[] monthsRU={"января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"};
+                                    for (int i=0; i<12; i++){
+                                        if (ArticleDate.contains(monthsEE[i])){
+                                            ArticleDate=ArticleDate.replaceAll(". " + monthsEE[i] + " ", "." +String.valueOf(i+1)+ ".");
+                                            break;
+                                        };
+                                        if (ArticleDate.contains(monthsRU[i])){
+                                            ArticleDate=ArticleDate.replaceAll(" " + monthsRU[i] + " ", "." +String.valueOf(i+1)+ ".");
                                             break;
                                         };
                                     }
@@ -143,9 +154,9 @@ public class NewsParser extends Application {
             VBox tempVb = new VBox();
             tempVb.getChildren().addAll(hla);
             tpa.get(i).setContent(tempVb);
+            tpa.get(i).setExpanded(false);
+            vb.getChildren().add(tpa.get(i));
         }
-
-        vb.getChildren().addAll(tpa);
 
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -161,6 +172,9 @@ public class NewsParser extends Application {
             categoryData = pageContent.select("ul[id=dh_btt_list]");
         } else {
             categoryData = pageContent.select("ul[id=dh_bn_list]");
+        }
+        if (categoryData.size()==0){
+            categoryData = pageContent.select("div[class=dtb-navigation]");
         }
         categoryData = categoryData.select("a");
         HashMap<String,String> hm = new HashMap();
