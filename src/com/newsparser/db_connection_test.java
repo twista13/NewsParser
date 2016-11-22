@@ -10,8 +10,8 @@ import java.util.Date;
 public class db_connection_test {
 
     public static void main(String[] args) throws SQLException {
-        //createDbUserTable();
-        insertIntoTable();
+        createDbUserTable();
+        //insertIntoTable();
 
     }
 
@@ -26,7 +26,7 @@ public class db_connection_test {
         Statement statement = null;
 
 
-        String createTableSQL = "CREATE TABLE NEWS_TABLE(CATEGORY TINYTEXT NOT NULL, " +
+        String createTableSQL = "CREATE TABLE NEWS_TABLE(CATEGORY TINYTEXT NOT NULL, SUBCATEGORY TINYTEXT NOT NULL, " +
                 "ARTICLE_DATE DATETIME NOT NULL, TITLE TEXT NOT NULL, ARTICLE_CONTENT LONGTEXT NOT NULL, NOTE LONGTEXT)";
 
         dbConnection = getDBConnection();

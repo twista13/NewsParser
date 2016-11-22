@@ -3,8 +3,8 @@ package com.newsparser;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TitledPane;
@@ -19,12 +19,12 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * Created by twista on 26.10.16.
@@ -38,11 +38,45 @@ public class NewsParser extends Application {
     @Override
     public void start(Stage primaryStage) {
         BorderPane bp = new BorderPane();
-        Scene scene = new Scene(bp,800,400);
+        Scene scene = new Scene(bp);
+        bp.setCenter(new Text("Choose article category from the list"));
+        bp.setPrefWidth(800);
         ScrollPane sp = new ScrollPane();
         VBox vb = new VBox();
         sp.setContent(vb);
-        bp.setLeft(sp);
+
+        GridPane gp = new GridPane();
+        gp.setGridLinesVisible(true);
+
+        TextFlow tf0 = new TextFlow(new Text("Archived news:"));
+        tf0.setStyle("-fx-background-color: beige ;");
+        gp.add(tf0,0,0);
+
+        ScrollPane archivedNewsSp = new ScrollPane();
+        VBox archivedNewsVb = new VBox();
+        ArrayList<TitledPane> archivedNewsTpa = new ArrayList<>();
+        ArrayList<String[]> dbData = new ArrayList<>();
+        try {
+            dbData=db_connector.getDBdata();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for (int i=0; i<dbData.size(); i++){
+            String[] articleData = dbData.get(i);
+            TitledPane tp = new TitledPane();
+            tp.setText(articleData[0]);
+            archivedNewsTpa.add(tp);
+        }
+        gp.add(archivedNewsSp,0,1);
+        archivedNewsSp.setContent(archivedNewsVb);
+        archivedNewsVb.getChildren().addAll(archivedNewsTpa);
+
+        //gp.add(new TextFlow(new Text("no items")),0,1);
+        gp.add(new TextFlow(new Text("Online news:")),0,2);
+        gp.add(sp,0,3);
+
+        bp.setLeft(gp);
+
 
         String link;
         link="http://www.delfi.ee";
@@ -125,6 +159,9 @@ public class NewsParser extends Application {
                                     sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                                     ArticleDate = sdf.format(date);
 
+                                    ArrayList<String[]> dbInputDataList = new ArrayList<>();
+                                    dbInputDataList.add(new String[]{tempKeyList.get(finalI),finalKeyList.get(finalJ),ArticleDate,ArticleTitle,ArticleText});
+
                                     TextFlow tf0 = new TextFlow(new Text(tempKeyList.get(finalI)+"->"+ finalKeyList.get(finalJ)));
                                     TextFlow tf1 = new TextFlow(new Text(ArticleDate));
                                     TextFlow tf2 = new TextFlow(new Text(ArticleTitle));
@@ -134,7 +171,23 @@ public class NewsParser extends Application {
                                     sp.setFitToWidth(true);
 
                                     VBox vb = new VBox();
-                                    vb.getChildren().addAll(tf0,tf1,tf2,tf3,sp);
+
+                                    FlowPane fp = new FlowPane();
+                                    Button buttonSave = new Button("Save article");
+                                    Button buttonAddComment = new Button("Add comment");
+                                    fp.getChildren().addAll(buttonSave,buttonAddComment);
+                                    buttonSave.setOnAction(new EventHandler<ActionEvent>() {
+                                        @Override
+                                        public void handle(ActionEvent event) {
+                                            try {
+                                                db_connector.insertIntoTable(dbInputDataList);
+                                            } catch (SQLException e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    });
+
+                                    vb.getChildren().addAll(tf0,tf1,tf2,sp,fp);
 
                                     sp.prefHeightProperty().bind(bp.heightProperty());
 
@@ -195,5 +248,7 @@ public class NewsParser extends Application {
         return pageContent;
     }
 
+    private static void displayArchivatedData (){
 
+    }
 }

@@ -1,7 +1,7 @@
 package com.newsparser;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * Created by twista on 27.10.16.
@@ -12,7 +12,14 @@ public class test {
         String str = new String("/dgdf/");
         str = str.replaceAll("/$","");
 
-        System.out.println(str);
+
+
+        ArrayList<String[]> inputDataList = new ArrayList() {};
+        inputDataList.add(new String[]{"1","2","3"});
+        inputDataList.add(new String[]{"s","a","s"});
+
+        String [] str3 = inputDataList.get(0);
+        System.out.println();
 
 
     }
