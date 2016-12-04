@@ -40,13 +40,13 @@ public class db_connector {
         String selectTableSQL = "SELECT CATEGORY, SUBCATEGORY, ARTICLE_DATE, TITLE, ARTICLE_CONTENT, NOTE from NEWS_TABLE";
         ResultSet rs = statement.executeQuery(selectTableSQL);
 
-        ArrayList<String[]> dbData = new ArrayList<>();
+        ArrayList<String[]> dbOutput = new ArrayList<>();
         while (rs.next()){
-            dbData.add(new String[]{rs.getString("CATEGORY"),rs.getString("SUBCATEGORY"),rs.getString("ARTICLE_DATE"),
+            dbOutput.add(new String[]{rs.getString("CATEGORY"),rs.getString("SUBCATEGORY"),rs.getString("ARTICLE_DATE"),
                     rs.getString("TITLE"),rs.getString("ARTICLE_CONTENT"),rs.getString("NOTE")});
         }
 
-        return dbData;
+        return dbOutput;
     }
 }
 
