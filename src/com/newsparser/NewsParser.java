@@ -1,26 +1,26 @@
 package com.newsparser;
 
-import javafx.application.Application;
+import com.sun.javafx.application.LauncherImpl;
+import javafx.application.Preloader;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.event.WeakEventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
-import sun.misc.IOUtils;
-import sun.nio.ch.IOUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -28,35 +28,39 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Objects;
 
 /**
  * Created by twista on 26.10.16.
  */
-public class NewsParser extends Application {
-    BorderPane bp = new BorderPane();
-    GridPane leftMenuGp = new GridPane();
-    VBox anCategoryVb = new VBox();
-    ScrollPane anCategorySp = new ScrollPane();
+public class NewsParser extends Preloader {
+    private BorderPane bp = new BorderPane();
+    private GridPane leftMenuGp = new GridPane();
+    private VBox anCategoryVb = new VBox();
+    private ScrollPane anCategorySp = new ScrollPane();
 
     public static void main(String[] args) {
-        Application.launch(args);
+        LauncherImpl.launchApplication(NewsParser.class, NewsParserPreloader.class, args);
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        Scene scene = new Scene(bp);
-
+    /**
+     *
+     * init() method starting after NewsParserPreloader stage is shown
+     * Collect category names and links to this categories
+     * Collect subcategories and links to subcategories using category links
+     * Create titled panes using category names, and create hyperlinks under titled panes using subcategory names
+     * Collect article titles and links to articles going through subcategory links, and create hyperlinks to articles
+     *
+     */
+    public void init() {
         ScrollPane onCategorySp = new ScrollPane();
 
         anCategoryVb.setPrefWidth(200);
@@ -186,7 +190,7 @@ public class NewsParser extends Application {
                                     }
 
                                     articleLayout(tempKeyList.get(finalI),finalKeyList.get(finalJ),ArticleDate,
-                                            ArticleTitle,ArticleText,true, bufferedImage);
+                                            ArticleTitle,ArticleText,true, bufferedImage, new String());
                                 }
                             });
                         }
@@ -206,12 +210,33 @@ public class NewsParser extends Application {
             onCategoryVb.getChildren().add(onCategoryTpa.get(i));
         }
 
+    }
+
+    /**
+     *
+     * @param primaryStage
+     * start() performed after all category links, subcategory links and article titles where collected from server
+     * main program UI stage is displayed
+     *
+     */
+    @Override
+    public void start(Stage primaryStage) {
+        Scene scene = new Scene(bp);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.show();
-
     }
 
+    /**
+     *
+     * This is the method where category names and links are parsed from html content
+     * @param link
+     * link variable received from init() method. This are links to categories (www.delfi.ee) and subcategories
+     * Categories are parsed from main page www,delfi.ee html content
+     * @return
+     * hashmap with category names and page links is returned
+     *
+     */
     private static HashMap<String,String> getCategoriesAndLinks(String link) {
         Document pageContent = getPageContent(link);
         if (pageContent==null){
@@ -220,19 +245,41 @@ public class NewsParser extends Application {
         Elements categoryData = null;
 
         if (link=="http://www.delfi.ee") {
-            categoryData = pageContent.select("ul[id=dh_btt_list]");
+            categoryData = pageContent.select("a[class=channels__link],a[class=navigation__item]");
         } else {
             categoryData = pageContent.select("ul[id=dh_bn_list]");
         }
         if (categoryData.size()==0){
             categoryData = pageContent.select("div[class=dtb-navigation]");
         }
+
         categoryData = categoryData.select("a");
         HashMap<String,String> hm = new HashMap();
 
         for (int i=0; i<categoryData.size();i++) {
             hm.put(categoryData.get(i).text(),categoryData.get(i).attr("href"));
         }
+
+        ArrayList<String> categoriesToDevelope = new ArrayList<>();
+        ArrayList<String> subcategoriesToDevelope = new ArrayList<>();
+        categoriesToDevelope.addAll(Arrays.asList("E-kaardid","EPL","Horoskoop","Valuuta","Raadiod"));
+        subcategoriesToDevelope.addAll(Arrays.asList("Foorum","Arhiiv","Kõik uudised","Tugi ja KKK","Vali preemia",
+                "Minu portfell","Rahvaajakirjanike edetabel","Loetumate TOP","KKK","Minu lood","Mängud","Videod"
+                ,"Lisa kuulutus paberlehte","Erilehed","Kasulik selgitab","Kalkulaatorid","Publiku jõulukalender",
+                "Aasta TOP 2016","Igav.ee","TV-kava","Lisa kuulutus","Digileht","Laadakalender"));
+
+
+        hm.remove(Arrays.asList(categoriesToDevelope));
+        if (link=="http://www.delfi.ee") {
+            for (int i=0; i<categoriesToDevelope.size(); i++) {
+                hm.remove(categoriesToDevelope.get(i));
+            }
+        } else {
+            for (int i=0; i<subcategoriesToDevelope.size(); i++) {
+                hm.remove(subcategoriesToDevelope.get(i));
+            }
+        }
+
         return hm;
     }
 
@@ -246,7 +293,15 @@ public class NewsParser extends Application {
         return pageContent;
     }
 
-    private void articleLayout (String category, String subcategory, String date, String title, String text, Boolean online, BufferedImage bufferedImage){
+    private void articleLayout (String category, String subcategory, String date, String title, String text, Boolean online, BufferedImage bufferedImage, String note ){
+        ArrayList<String> dbInputDataList = new ArrayList<>();
+        dbInputDataList.add(0,category);
+        dbInputDataList.add(1,subcategory);
+        dbInputDataList.add(2,date);
+        dbInputDataList.add(3,title);
+        dbInputDataList.add(4,text);
+        dbInputDataList.add(5,note);
+
         Text catSubcatTxt = new Text(category+" --> "+subcategory);
         catSubcatTxt.setUnderline(true);
         TextFlow tf0 = new TextFlow(catSubcatTxt);
@@ -286,52 +341,79 @@ public class NewsParser extends Application {
         articleTextSp.setFitToWidth(true);
         VBox articleContentVb = new VBox();
         FlowPane bottomButtonPanelFp = new FlowPane();
-        Button buttonSave = new Button("Save article");
-        Button buttonRemove = new Button("Remove article");
-        Button buttonAddComment = new Button("Add/Edit comment");
+        Button buttonSave = new Button("Save Article");
+        Button buttonRemove = new Button("Remove Article");
+        Button buttonAddComment = new Button("Add/Edit Note");
         Button cancel = new Button("Cancel");
         Button ok = new Button("OK");
+        TextArea noteTa = new TextArea();
+        Text noteTitle = new Text("\nNOTE:");
+        noteTitle.setStyle("-fx-font: italic 11pt 'Arial Black' ;");
+        Line line = new Line();
+        line.endXProperty().bind(articleTextTf.widthProperty());
+        Text noteTxt = new Text(note);
+        noteTxt.setStyle("-fx-font: 11pt 'Arial Black'; ");
         buttonAddComment.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                TextArea comment = new TextArea();
-                articleContentVb.getChildren().add(4,comment);
-                articleTextSp.setVvalue(1);
+                articleContentVb.getChildren().add(4,noteTa);
+                articleTextSp.vvalueProperty().bind(articleTextVb.heightProperty());
                 bottomButtonPanelFp.getChildren().clear();
-                bottomButtonPanelFp.getChildren().addAll(ok,cancel);
-                cancel.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        bottomButtonPanelFp.getChildren().clear();
-                        articleContentVb.getChildren().remove(4);
-                        if (online){
-                            bottomButtonPanelFp.getChildren().addAll(buttonSave,buttonAddComment);
-                        } else {
-                            bottomButtonPanelFp.getChildren().addAll(buttonRemove,buttonAddComment);
-                        }
-
+                if (online){
+                    buttonSave.setText("OK");
+                    bottomButtonPanelFp.getChildren().addAll(buttonSave,cancel);
+                } else {
+                    bottomButtonPanelFp.getChildren().addAll(ok,cancel);
+                    //beretsja iz baz6 zapihivaetsja v Text Area
+                    if (note!="" && note!= null){
+                        noteTa.setText(note);
+                        articleTextVb.getChildren().remove(noteTxt);
                     }
-                });
+                }
+            }
+        });
+        ok.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                // zamenjajetsja v baze note, v6voditsja novoe articleTextTf
+                noteTxt.setText(new String(noteTa.getText()));
+                articleContentVb.getChildren().remove(4);
+                articleTextVb.getChildren().add(noteTxt);
+                bottomButtonPanelFp.getChildren().clear();
+                bottomButtonPanelFp.getChildren().addAll(buttonRemove,buttonAddComment);
+                articleTextSp.vvalueProperty().bind(articleTextVb.heightProperty());
+            }
+        });
+        cancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                bottomButtonPanelFp.getChildren().clear();
+                articleContentVb.getChildren().remove(4);
+                if (online){
+                    buttonSave.setText("Save Article");
+                    bottomButtonPanelFp.getChildren().addAll(buttonSave,buttonAddComment);
+                } else {
+                    bottomButtonPanelFp.getChildren().addAll(buttonRemove,buttonAddComment);
+                }
             }
         });
         if (online){
-            ArrayList<String> dbInputDataList = new ArrayList<>();
-            dbInputDataList.add(0,category);
-            dbInputDataList.add(1,subcategory);
-            dbInputDataList.add(2,date);
-            dbInputDataList.add(3,title);
-            dbInputDataList.add(4,text);
             bottomButtonPanelFp.getChildren().addAll(buttonSave,buttonAddComment);
             buttonSave.setOnAction(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent event) {
                     try {
+                        // proverjaet, esli est' TextArea to ... s4it6vaet zapihivaet v bazu
+                        if (articleContentVb.getChildren().contains(noteTa)){
+                            dbInputDataList.remove(5);
+                            dbInputDataList.add(5,noteTa.getText());
+                        }
                         db_connector.insertIntoTable(dbInputDataList,bufferedImage);
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                     articleLayout(dbInputDataList.get(0),dbInputDataList.get(1),dbInputDataList.get(2),dbInputDataList.get(3),
-                            dbInputDataList.get(4),false, bufferedImage);
+                            dbInputDataList.get(4),false, bufferedImage,dbInputDataList.get(5));
                     displayArchivedData();
                 }
             });
@@ -349,6 +431,9 @@ public class NewsParser extends Application {
                     bp.setCenter(new Text("Choose article category from the list"));
                 }
             });
+            if (note!="" && note!= null){
+                articleTextVb.getChildren().addAll(noteTitle,noteTxt);
+            }
             bottomButtonPanelFp.getChildren().addAll(buttonRemove,buttonAddComment);
             articleContentVb.getChildren().addAll(tf0,tf1,tf2,articleTextSp,bottomButtonPanelFp);
         }
@@ -407,7 +492,7 @@ public class NewsParser extends Application {
                     @Override
                     public void handle(ActionEvent event) {
                         articleLayout(anArticleDataArray.get(0),anArticleDataArray.get(1),anArticleDataArray.get(2),
-                                anArticleDataArray.get(3),anArticleDataArray.get(4),false,bufferedImage);
+                                anArticleDataArray.get(3),anArticleDataArray.get(4),false,bufferedImage, anArticleDataArray.get(5));
                     }
                 });
                 anArticleTitleHla.add(anArticleTitleHl);

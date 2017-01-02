@@ -26,7 +26,17 @@ public  class test extends Application{
             if (tit.getText()=="ne1w"){
                 System.out.println("sdffsdf");
             }
-
         }
+
+        ArrayList<String> duplicatedCategories = new ArrayList<>();
+        ArrayList<String> subcategoriesToDevelop = new ArrayList<>();
+        duplicatedCategories.addAll(Arrays.asList("E-kaardid"));
+
+        HashMap<String,String> hm = new HashMap();
+        hm.put("hello","hi"); hm.put("E-kaardid","link");
+        for (int i=0; i<duplicatedCategories.size(); i++) {
+            hm.remove(duplicatedCategories.get(i));
+        }
+        System.out.println(hm);
     }
 }

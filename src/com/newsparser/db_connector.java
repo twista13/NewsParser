@@ -1,5 +1,7 @@
 package com.newsparser;
 
+import sun.misc.IOUtils;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -20,7 +22,14 @@ import java.util.stream.Stream;
 public class db_connector {
     public static Connection getDBConnection() throws SQLException {
         Connection dbConnection = null;
-        dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/news_db?useSSL=false","root", "111111");
+       // dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/news_db?useSSL=false","root", "111111");
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        //dbConnection = DriverManager.getConnection("jdbc:sqlite::resource:NewspaperDatabase.db");
+        dbConnection = DriverManager.getConnection("jdbc:sqlite:NewspaperDatabase.db");
         return dbConnection;
     }
     public static void insertIntoTable (ArrayList<String> dbInputDataList, BufferedImage bufferedImage) throws SQLException {
@@ -29,25 +38,28 @@ public class db_connector {
         dbConnection = getDBConnection();
         String insertTableSQL;
         if (!dbInputDataList.get(2).equals("")){
-            insertTableSQL = "INSERT INTO NEWS_TABLE(CATEGORY, SUBCATEGORY, ARTICLE_DATE, TITLE, ARTICLE_CONTENT, IMAGE)" +
+            insertTableSQL = "INSERT INTO NEWS_TABLE(CATEGORY, SUBCATEGORY, ARTICLE_DATE, TITLE, ARTICLE_CONTENT, NOTE, IMAGE)" +
                     "VALUES('"+dbInputDataList.get(0)+"','"+dbInputDataList.get(1)+"','"+dbInputDataList.get(2)+"','"+
-                    dbInputDataList.get(3)+"','"+dbInputDataList.get(4)+"',?)";
+                    dbInputDataList.get(3)+"',?,?,?)";
         } else  {
-            insertTableSQL = "INSERT INTO NEWS_TABLE(CATEGORY, SUBCATEGORY, TITLE, ARTICLE_CONTENT, IMAGE)" +
+            insertTableSQL = "INSERT INTO NEWS_TABLE(CATEGORY, SUBCATEGORY, TITLE, ARTICLE_CONTENT, NOTE, IMAGE)" +
                     "VALUES('"+dbInputDataList.get(0)+"','"+dbInputDataList.get(1)+"','"+
-                    dbInputDataList.get(3)+"','"+dbInputDataList.get(4)+"',?)";
+                    dbInputDataList.get(3)+"',?,?,?)";
         }
-
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         try {
             ImageIO.write(bufferedImage,"jpg",os);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        InputStream is = new ByteArrayInputStream(os.toByteArray());
+        byte[] byteArray = os.toByteArray();
+        //InputStream is = new ByteArrayInputStream(os.toByteArray());
 
         preparedStatement = dbConnection.prepareStatement(insertTableSQL);
-        preparedStatement.setBinaryStream(1,is);
+        preparedStatement.setString(1,dbInputDataList.get(4));
+        preparedStatement.setString(2,dbInputDataList.get(5));
+        preparedStatement.setBytes(3,byteArray);
+        //preparedStatement.setBinaryStream(3,is);
         preparedStatement.executeUpdate();
 
         preparedStatement.close();
@@ -94,7 +106,6 @@ public class db_connector {
             }
 
             dbOutput.put(newsDataArray,bufferedImage);
-
         }
 
         return dbOutput;

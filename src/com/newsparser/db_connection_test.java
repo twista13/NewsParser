@@ -26,7 +26,13 @@ public class db_connection_test {
 
     private static Connection getDBConnection() throws SQLException {
         Connection dbConnection = null;
-        dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/news_db?useSSL=false","root", "111111");
+       // dbConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/news_db?useSSL=false","root", "111111");
+        try {
+            Class.forName("org.sqlite.JDBC");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        dbConnection = DriverManager.getConnection("jdbc:sqlite:NewspaperDatabase.db");
         return dbConnection;
     }
 
