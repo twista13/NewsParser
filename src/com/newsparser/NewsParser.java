@@ -96,7 +96,7 @@ public class NewsParser extends Preloader {
                     @Override
                     public void handle(ActionEvent event) {
                         ArrayList<Hyperlink> titleHlArray = new ArrayList<>();
-                        HashMap<String,String> titlesLinksHM = parseTitles(subcategoryLinkStr,categoryLinkStr);
+                        LinkedHashMap<String,String> titlesLinksHM = parseTitles(subcategoryLinkStr,categoryLinkStr);
                         for (String titleStr : titlesLinksHM.keySet()){
                             Hyperlink titleHl = new Hyperlink();
                             String titleLinkStr = titlesLinksHM.get(titleStr);
@@ -279,7 +279,7 @@ public class NewsParser extends Preloader {
         return hm;
     }
 
-    private static HashMap<String,String > parseTitles (String subcategoryLinkStr, String categoryLinkStr) {
+    private static LinkedHashMap <String,String > parseTitles (String subcategoryLinkStr, String categoryLinkStr) {
 
         if (!subcategoryLinkStr.contains("http://")){
             subcategoryLinkStr= categoryLinkStr.replaceAll("/$","")+subcategoryLinkStr;
@@ -290,7 +290,7 @@ public class NewsParser extends Preloader {
             titlesHtmlElements = webPageContent.select("a[class=cat3title]");
         }
 
-        HashMap<String,String> titleHM = new HashMap<>();
+        LinkedHashMap <String,String> titleHM = new LinkedHashMap <>();
         for (Element titleHtmlElement : titlesHtmlElements){
             String titleStr = titleHtmlElement.text();
             String linkStr = titleHtmlElement.attr("href");
