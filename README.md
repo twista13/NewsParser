@@ -17,16 +17,16 @@ Programm hoiab uudiseid antud teema kohta. Programm kuvab uudised mugavas formaa
 -uudiste kustutamine
 
 -uudiste kuvamine
-- uudise akna värv muutub, sõltub sellest kas on uudis arhiveeritud või tegemist online uudisega
-- kui märkus on salvestatud, siis uudis automaatselt kerib alla
-- kui märkus on salvestatud, siis "NOTE:" pealkiri ilmneb aknas
+ -uudise akna värv muutub, sõltub sellest kas on uudis arhiveeritud või tegemist online uudisega
+ -kui märkus on salvestatud, siis uudis automaatselt kerib alla
+ -kui märkus on salvestatud, siis "NOTE:" pealkiri ilmneb aknas
 
 -andmete otsimine arhiivist
 
 -märkmete salvestamine
-- vajutades nuppu  "Add/edit note", "NOTE:" pealkiri ilmneb aknas
-- uudis automaatselt kerib alla
-- eelmine märkus kaob tekstist ja ilmneb redigeerimis aknas
+ -vajutades nuppu  "Add/edit note", "NOTE:" pealkiri ilmneb aknas
+ -uudis automaatselt kerib alla
+ -eelmine märkus kaob tekstist ja ilmneb redigeerimis aknas
 
 -uudiste kategooriate ja alamkategooriate parsimise ajal ilmned teavitus aken
 
