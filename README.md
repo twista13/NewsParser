@@ -1,21 +1,26 @@
 #NewsParser
 
-NewsParser.java - programmi pea fail, kus on praegu realiseeritud uudiste kategoorijate parsimine delfi.ee uudiste portaalist,  kategoorija linkide parsimine, ja need kategooriad kuvatakse kasutajaliideses.
+NewsParser - programmi pea klass, kus on praegu realiseeritud uudiste kategoorijate parsimine delfi.ee uudiste portaalist,  kategoorija linkide parsimine, ja need kategooriad kuvatakse kasutajaliideses.
 
-Plaanis:
+NewsParserPreloader - programmmi klass, kus realiseeritud eelkoormus aken
 
-Programm hoiab uudiseid antud teema kohta. Programm kuvab uudised mugavas formaadis ja ilma reklaamita. Program salvestab uudised antud kategooriast. Programm võimaldab otsida infot salvestatud arhiivist.
+DB_connector - selles klassis realiseeritud suhtlus andmebaasiga
 
--automaatne uudiste parsimine antud teemal
 
--parsimine nõudmisel
 
--uudiste salvestamine andmebaasi MySQL
+Programm hoiab uudiseid antud teema kohta. Programm kuvab uudised mugavas formaadis ja ilma reklaamita. Program salvestab uudised. Programm võimaldab otsida infot salvestatud arhiivist.
+
+
+-uudiste parsimine
+
+-uudiste salvestamine andmebaasi SQLite
+
+-uudiste kustutamine
 
 -uudiste kuvamine
 
--uudiste vaatamine arhiivis kuupäeva ja kategooria järgi
-
 -andmete otsimine arhiivist
+
+-märkmete salvestamine
 
 

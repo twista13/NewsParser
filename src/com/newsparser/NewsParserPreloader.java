@@ -10,6 +10,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -23,14 +24,15 @@ public class NewsParserPreloader extends Preloader {
     public void start(Stage primaryStage) throws Exception {
         preloaderStage = primaryStage;
 
-        Label title = new Label("Gathering data from www.delfi.ee \n please wait...");
-       // title.setFont(Font.font(null,FontWeight.BOLD, 16));
-        title.setTextAlignment(TextAlignment.CENTER);
-        VBox vb = new VBox(title);
+        Text text = new Text("Gathering data from www.delfi.ee \n please wait...");
+        text.setTextAlignment(TextAlignment.CENTER);
+        VBox vb = new VBox(text);
         vb.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(vb, 400, 100);
         primaryStage.setScene(scene);
+        primaryStage.setTitle("Newspaper");
+        primaryStage.setResizable(false);
         primaryStage.show();
 
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
