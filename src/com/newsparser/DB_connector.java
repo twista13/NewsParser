@@ -29,8 +29,8 @@ public class DB_connector {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        //dbConnection = DriverManager.getConnection("jdbc:sqlite::resource:NewspaperDatabase.db");
-        dbConnection = DriverManager.getConnection("jdbc:sqlite:NewspaperDatabase.db");
+        dbConnection = DriverManager.getConnection("jdbc:sqlite::resource:NewspaperDatabase.db");
+        //dbConnection = DriverManager.getConnection("jdbc:sqlite:NewspaperDatabase.db");
         return dbConnection;
     }
 
