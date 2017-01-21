@@ -5,18 +5,16 @@ import javafx.application.Preloader;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 /**
- * Created by twista on 2.01.17.
+ * Author: Aleksei Hemeljainen
+ *
+ * NewsParserPreloader class "wait" window displayed, while collecting preliminary data from internet
  */
 public class NewsParserPreloader extends Preloader {
     private Stage preloaderStage;
@@ -38,8 +36,8 @@ public class NewsParserPreloader extends Preloader {
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override
             public void handle(WindowEvent event) {
-                Platform.exit();
-                System.exit(0);
+                Platform.exit(); // Stop program execution
+                System.exit(0);  // Stop program thread
             }
         });
     }
@@ -47,7 +45,7 @@ public class NewsParserPreloader extends Preloader {
     @Override
     public void handleStateChangeNotification(StateChangeNotification stateChangeNotification) {
         if (stateChangeNotification.getType() == StateChangeNotification.Type.BEFORE_START) {
-            preloaderStage.hide();
+            preloaderStage.hide(); // Window dismissed, when data loaded
         }
     }
 }

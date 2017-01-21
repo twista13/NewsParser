@@ -1,6 +1,12 @@
 #NewsParser
+Autor: Aleksei Hemeljainen 
+See projekt on Java algkursuse kodutöö
+Programm kirjutatud nullist, ilma abita kasutades google
 
-NewsParser - programmi pea klass, kus on praegu realiseeritud uudiste kategoorijate parsimine delfi.ee uudiste portaalist,  kategoorija linkide parsimine, ja need kategooriad kuvatakse kasutajaliideses.
+
+
+
+NewsParser - programmi pea klass, kus on praegu realiseeritud uudiste parsimine delfi.ee portaalist. Parsitud andmed kuvatakse kasutajaliides.
 
 NewsParserPreloader - programmmi klass, kus realiseeritud eelkoormus aken
 
@@ -8,40 +14,46 @@ DB_connector - selles klassis realiseeritud suhtlus andmebaasiga
 
 
 
+
 Programm hoiab uudiseid antud teema kohta. Programm kuvab uudised mugavas formaadis. Program salvestab uudised. Programm võimaldab otsida infot salvestatud arhiivist.
 
--uudiste parsimine
+Omadused:
 
--uudiste salvestamine andmebaasi SQLite
+-uudiste parsimine (kategooria, alamkategooria, pealkiri, kuupäev, artikli tekst, pilt)
 
--uudiste kustutamine
+-uudiste salvestamine SQLite andmebaasi
 
--uudiste kuvamine
+-uudiste kustutamine SQLite andmebaasist
 
--uudise akna värv muutub, sõltub sellest kas on uudis arhiveeritud või tegemist online uudisega
+-uudiste kuvamine (kategooria,alamkategooria, pealkiri, kuupäev, artikli tekst, pilt, kasutaja märkus)
 
--kui märkus on salvestatud, siis uudis automaatselt kerib alla
+-uudise pealkiri akna värv muutub - sõltub sellest kas on uudis arhiveeritud või tegemist online uudisega
+
+
+
+-kui interneti ei ole siis sõnum "no internet connection" ilmub aknas (alt navigatsioonimenüü)
+
+-kui mitte ühtegi artiklit ei ole salsestatu, siis ilmneb sõnum "no items" (üles navigatsioonimenüü)
+
+
+-andmete otsimine arhiivist. Otsingu  ajal kontrollitakse kategooria, alamkategooria, pealkiri, kuupäev, artikli tekst, kasutaja märge.
+
+
+-kasutaja märkuse salvestamine
+
+-valides artikkel, mis sisaldab märkus, uudis automaatselt kerib alla et oleks kohe näha märkus
 
 -kui märkus on salvestatud, siis "NOTE:" pealkiri ilmneb aknas
 
--kui interneti ei ole siis sõnum "no internet connection" ilmub aknas
+-vajutades nuppu  "Add/edit note", "NOTE:" pealkiri ilmneb aknas ja uudis automaatselt kerib alla, eelmine märkus kaob tekstist ja ilmneb redigeerimis aknas
 
--kui mitte ühtegi artiklit ei ole salsestatu, siis ilmneb sõnum "no items"
+-juhul, kui kasutaja paneb märkuse online artikli, siis artikkel koos märkusega salvestatakse andmebaasi, ja  kuvatakse andmed kohe andmebaasist
 
+-kui kasutaja salvestab artikkel, siis kuvatakse andmed kohe andmebaasist
 
--andmete otsimine arhiivist
+-klikkides online artiklile, mis on juba olemas andmebaasis, suunatakse kohe salvestatud artiklile
 
-
--märkmete salvestamine
-
--vajutades nuppu  "Add/edit note", "NOTE:" pealkiri ilmneb aknas
-
--uudis automaatselt kerib alla
-
--eelmine märkus kaob tekstist ja ilmneb redigeerimis aknas
-
-
--uudiste kategooriate ja alamkategooriate parsimise ajal ilmned teavitus aken
+-programmi alguses, uudiste kategooriate ja alamkategooriate parsimise ajal, ilmned teavitus aken
 
 
 
