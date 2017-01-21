@@ -596,7 +596,7 @@ public class NewsParser extends Preloader {
         Button buttonSave = new Button("Save Article");
         Button buttonRemove = new Button("Remove Article");
         Button buttonAddNote = new Button("Add/Edit Note");
-        Button buttponCancel = new Button("Cancel");
+        Button buttonCancel = new Button("Cancel");
         Button buttonOk = new Button("OK");
         TextArea noteTextArea = new TextArea();
         Text noteTitleText = new Text("\nNOTE:");
@@ -616,9 +616,9 @@ public class NewsParser extends Preloader {
                 bottomButtonPanelFp.getChildren().clear();
                 if (finalIsOnlineBoolean){
                     buttonSave.setText("OK"); // Rename button Save to OK
-                    bottomButtonPanelFp.getChildren().addAll(buttonSave,buttponCancel);
+                    bottomButtonPanelFp.getChildren().addAll(buttonSave,buttonCancel);
                 } else {
-                    bottomButtonPanelFp.getChildren().addAll(buttonOk,buttponCancel);
+                    bottomButtonPanelFp.getChildren().addAll(buttonOk,buttonCancel);
                     //beretsja iz baz6 zapihivaetsja v Text Area
                     if (noteText.getText()!=""){
                         noteTextArea.setText(hashMapOfArticleContent.get("note"));
@@ -643,7 +643,7 @@ public class NewsParser extends Preloader {
                 contentLayout(hashMapOfArticleContent,bufferedImage,false); // Updated article content page
             }
         });
-        buttponCancel.setOnAction(new EventHandler<ActionEvent>() {
+        buttonCancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 bottomButtonPanelFp.getChildren().clear();
