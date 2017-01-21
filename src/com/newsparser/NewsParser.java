@@ -156,7 +156,7 @@ public class NewsParser extends Preloader {
                                         contentLayout(dbOutputCategoriesContentHM,
                                                 dbOutputCategoriesContentImageHM.get(dbOutputCategoriesContentHM),false);
                                         // Check if article exist in database
-                                        // Send article content, article image and "true" as offline to display
+                                        // Send article content, article image and "false" as offline to display
                                     } else {
                                         HashMap<HashMap,BufferedImage> parsedContent=
                                                 parseContent(onlineCategorySubcategoryLinksHashMap);

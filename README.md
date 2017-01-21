@@ -1,6 +1,6 @@
-#NewsParser
+#Newspaper
 Autor: Aleksei Hemeljainen  
-See projekt on Java algkursuse kodutöö  
+Newspaper projekt on Java algkursuse kodutöö  
 Programm kirjutatud nullist, ilma abita kasutades google  
 
 
