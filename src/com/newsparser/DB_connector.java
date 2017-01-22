@@ -45,7 +45,7 @@ public class DB_connector {
      * @param bufferedImage - article image
      * @throws SQLException - sql prepared statement
      */
-    protected static void insertIntoTable(HashMap<String, String> dbInputContent,
+    public static void insertIntoTable(HashMap<String, String> dbInputContent,
                                           BufferedImage bufferedImage) throws SQLException {
         Connection dbConnection;
         PreparedStatement preparedStatement;
@@ -89,7 +89,7 @@ public class DB_connector {
      * @return - articles with images
      * @throws SQLException
      */
-    protected static LinkedHashMap<HashMap,BufferedImage> getContentFromDB(String checkIfArticleInDbByLink) throws SQLException {
+    public static LinkedHashMap<HashMap,BufferedImage> getContentFromDB(String checkIfArticleInDbByLink) throws SQLException {
         Connection dbConnection = getDBConnection();
         Statement statement = dbConnection.createStatement();
         ResultSet resultSet;
@@ -150,7 +150,7 @@ public class DB_connector {
      * @param hashMapOfArticleContent
      * @throws SQLException
      */
-    protected static void deleteFromTable(HashMap<String, String> hashMapOfArticleContent) throws SQLException {
+    public static void deleteFromTable(HashMap<String, String> hashMapOfArticleContent) throws SQLException {
         Connection dbConnection = getDBConnection();;
         PreparedStatement preparedStatement = null;
 
@@ -170,7 +170,7 @@ public class DB_connector {
      * @param hashMapOfArticleContent - contains category, subcategory, date, title, body, note.
      * @throws SQLException
      */
-    protected static void updateNote(HashMap<String,String> hashMapOfArticleContent) throws SQLException  {
+    public static void updateNote(HashMap<String,String> hashMapOfArticleContent) throws SQLException  {
         Connection dbConnection = getDBConnection();
         PreparedStatement preparedStatement = null;
 
