@@ -37,16 +37,17 @@ import java.util.*;
 /**
  * Author: Aleksei Hemeljainen
  *
- * This project written for the Java course homework
- * Program is written from scratch, without any help except for google
+ * Project invented by myself within the framework of education
+ * Program is written from scratch, without any help except Google
  *
- * Newspaper program main class
+ * NewsParser - program main class
+ *
  * Parse news from delfi.ee portal
  * Display data in User Interface
  * Save chosen article
  * Search for information stored in the database
  *
- *  Functionality specification:
+ *  Functional specification:
  *  -parse data (categories, subcategories, title, date, body, image)
  *  -save data in SQLite database
  *  -remove data from SQLite database
@@ -336,7 +337,7 @@ public class NewsParser extends Preloader {
         categoriesToDevelope.addAll(Arrays.asList("Delfi TV","Ekspress"));
         subcategoriesToDevelope.addAll(Arrays.asList("Lisa kuulutus paberlehte","Erilehed","Arhiiv","Mängud","Igav.ee",
                 "Loetumate TOP","Foorum","Kõik uudised","LHV","Tugi ja KKK","Vali preemia","Minu portfell",
-                "Rahvaajakirjanike edetabel","TV-kava","Digileht", "Laadakalender", "Mood ja ilu","Tervis"));
+                "Rahvaajakirjanike edetabel","TV-kava","Digileht", "Laadakalender"));
         // List of pages with non standard structure
         if (linkStr=="http://www.delfi.ee") {
             for (int i=0; i<categoriesToDevelope.size(); i++) {
@@ -399,9 +400,10 @@ public class NewsParser extends Preloader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Elements bodyHtmlElements = webPageContent.select("div[class=articleBody],div[class=articleContent]");
+        Elements bodyHtmlElements = webPageContent.select("div[class=articleBody],div[class=articleContent]," +
+                "div[class=article]");
         // Parse article body
-        bodyHtmlElements=bodyHtmlElements.select("p");
+        bodyHtmlElements=bodyHtmlElements.select("p,h2");
         StringBuilder bodyStrBuilder = new StringBuilder();
         for (Element bodyHtmlElement : bodyHtmlElements){
             bodyStrBuilder.append(bodyHtmlElement.text()+"\n\n");
@@ -414,29 +416,36 @@ public class NewsParser extends Preloader {
             // Some pages have different format. Second possibility to parse title
         }
         String dateStr  = webPageContent.select("div[class=articleDate]").text();//Parse article date
-        String[] monthsEE={"jaanuar","veebruar","märts","aprill","mai","juuni","juuli","august","september","oktoober","november","detsember"};
-        String[] monthsRU={"января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"};
-        //Format article date
-        for (int i=0; i<12; i++){
-            if (dateStr.contains(monthsEE[i])){
-                dateStr=dateStr.replaceAll(". " + monthsEE[i] + " ", "." +String.valueOf(i+1)+ ".");
-                break;
-            };
-            if (dateStr.contains(monthsRU[i])){
-                dateStr=dateStr.replaceAll(" " + monthsRU[i] + " ", "." +String.valueOf(i+1)+ ".");
-                break;
-            };
-        }
-        SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("dd.MM.yyyy HH:mm");
-        Date date = null;
-        if (!dateStr.equals("")){
-            try {
-                date = simpleDateFormat.parse(dateStr);
-            } catch (ParseException e) {
-                e.printStackTrace();
+        if (dateStr.equals("")){
+            dateStr = webPageContent.select("meta[itemprop=datePublished]").attr("content");
+            // Some pages have different date format
+            dateStr = dateStr.replaceAll("T"," ");
+            dateStr = dateStr.replaceAll(":..\\+.*","");
+        } else {
+            String[] monthsEE={"jaanuar","veebruar","märts","aprill","mai","juuni","juuli","august","september","oktoober","november","detsember"};
+            String[] monthsRU={"января","февраля","марта","апреля","мая","июня","июля","августа","сентября","октября","ноября","декабря"};
+            //Format article date
+            for (int i=0; i<12; i++){
+                if (dateStr.contains(monthsEE[i])){
+                    dateStr=dateStr.replaceAll(". " + monthsEE[i] + " ", "." +String.valueOf(i+1)+ ".");
+                    break;
+                };
+                if (dateStr.contains(monthsRU[i])){
+                    dateStr=dateStr.replaceAll(" " + monthsRU[i] + " ", "." +String.valueOf(i+1)+ ".");
+                    break;
+                };
             }
-            simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            dateStr = simpleDateFormat.format(date);
+            SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("dd.MM.yyyy HH:mm");
+            Date date = null;
+            if (!dateStr.equals("")){
+                try {
+                    date = simpleDateFormat.parse(dateStr);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                dateStr = simpleDateFormat.format(date);
+            }
         }
 
         HashMap<HashMap,BufferedImage> contentWithImage = new HashMap<>();// Construct and return article content hash map

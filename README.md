@@ -1,7 +1,6 @@
 #Newspaper
 Autor: Aleksei Hemeljainen  
-Newspaper projekt on Java algkursuse kodutöö  
-Programm kirjutatud nullist, ilma abita kasutades google  
+Projekt tegin õpingute raames. Ise nuputasin välja, kirjutasin nullist, ilma abita kasutades Google  
 
 
 NewsParser - programmi pea klass, kus on praegu realiseeritud uudiste parsimine delfi.ee portaalist. Parsitud andmed kuvatakse kasutajaliides.  
