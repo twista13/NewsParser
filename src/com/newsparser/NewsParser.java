@@ -1,6 +1,7 @@
 package com.newsparser;
 
 import com.sun.javafx.application.LauncherImpl;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.application.Preloader;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -337,7 +338,7 @@ public class NewsParser extends Preloader {
         categoriesToDevelope.addAll(Arrays.asList("Delfi TV","Ekspress"));
         subcategoriesToDevelope.addAll(Arrays.asList("Lisa kuulutus paberlehte","Erilehed","Arhiiv","Mängud","Igav.ee",
                 "Loetumate TOP","Foorum","Kõik uudised","LHV","Tugi ja KKK","Vali preemia","Minu portfell",
-                "Rahvaajakirjanike edetabel","TV-kava","Digileht", "Laadakalender"));
+                "Rahvaajakirjanike edetabel","TV-kava","Digileht", "Laadakalender","Lisa kuulutus"));
         // List of pages with non standard structure
         if (linkStr=="http://www.delfi.ee") {
             for (int i=0; i<categoriesToDevelope.size(); i++) {
@@ -366,18 +367,27 @@ public class NewsParser extends Preloader {
             // Some subcategory links contain only end of link. Compose entire link using categoryLinkStr
         }
         Document webPageContent = getWebPageContent(subcategoryLinkStr);
-        Elements titlesHtmlElements = webPageContent.select("a[class=article-title]");
+        Elements titlesHtmlElements =  webPageContent.select("a[class=article-title]");;
         if (titlesHtmlElements.size()==0) {
-            titlesHtmlElements = webPageContent.select("a[class=cat3title]");
+            titlesHtmlElements = webPageContent.select("a[class=cat3title]"); //Pages with different title format
         }
+
+        String [] pagesToDevelope = {"digileht.","blog."}; // unsupported pages
 
         LinkedHashMap <String,String> listOfTitlesWithLinks = new LinkedHashMap <>();
         for (Element titleHtmlElement : titlesHtmlElements){
             String titleString = titleHtmlElement.text();
             String linkString = titleHtmlElement.attr("href");
-            listOfTitlesWithLinks.put(titleString,linkString);
+            Boolean exclude = false;
+            for (String unsupportedPage : pagesToDevelope){
+                if (linkString.contains(unsupportedPage)){
+                    exclude=true;
+                }
+            }
+            if(!exclude){
+                listOfTitlesWithLinks.put(titleString,linkString);
+            }
         }
-
        return listOfTitlesWithLinks;
     }
 
