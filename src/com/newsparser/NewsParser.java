@@ -335,7 +335,7 @@ public class NewsParser extends Preloader {
         }
         ArrayList<String> categoriesToDevelope = new ArrayList<>();
         ArrayList<String> subcategoriesToDevelope = new ArrayList<>();
-        categoriesToDevelope.addAll(Arrays.asList("Delfi TV","Ekspress"));
+        categoriesToDevelope.addAll(Arrays.asList("Delfi TV","Ekspress","Rus"));
         subcategoriesToDevelope.addAll(Arrays.asList("Lisa kuulutus paberlehte","Erilehed","Arhiiv","Mängud","Igav.ee",
                 "Loetumate TOP","Foorum","Kõik uudised","LHV","Tugi ja KKK","Vali preemia","Minu portfell",
                 "Rahvaajakirjanike edetabel","TV-kava","Digileht", "Laadakalender","Lisa kuulutus"));
@@ -580,12 +580,12 @@ public class NewsParser extends Preloader {
         TextFlow titleTextFlow = new TextFlow(new Text(hashMapOfArticleContent.get("title")));
         if (isOnlineBoolean){
             categoryTetxtFlow.setStyle("-fx-background-color: blanchedalmond ;");
-            dateTextFlow.setStyle("-fx-background-color: blanchedalmond ; -fx-font: 10pt 'Arial Black'; ");
-            titleTextFlow.setStyle("-fx-background-color: blanchedalmond ; -fx-font:  italic 12pt 'Arial Black'; ");
+            dateTextFlow.setStyle("-fx-background-color: blanchedalmond ; -fx-font: 10pt 'Arial'; ");
+            titleTextFlow.setStyle("-fx-background-color: blanchedalmond ; -fx-font:  italic 12pt 'Arial'; ");
         } else {
             categoryTetxtFlow.setStyle("-fx-background-color: azure ; ");
-            dateTextFlow.setStyle("-fx-background-color: azure ; -fx-font: 10pt 'Arial Black'; ");
-            titleTextFlow.setStyle("-fx-background-color: azure ; -fx-font:  italic 12pt 'Arial Black'; ");
+            dateTextFlow.setStyle("-fx-background-color: azure ; -fx-font: 10pt 'Arial'; ");
+            titleTextFlow.setStyle("-fx-background-color: azure ; -fx-font:  italic 12pt 'Arial'; ");
         }
         categoryTetxtFlow.setPadding(new Insets(0,0,0,6));
         dateTextFlow.setPadding(new Insets(6,6,2,6));
