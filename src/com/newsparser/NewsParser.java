@@ -619,9 +619,9 @@ public class NewsParser extends Preloader {
         Button buttonOk = new Button("OK");
         TextArea noteTextArea = new TextArea();
         Text noteTitleText = new Text("\nNOTE:");
-        noteTitleText.setStyle("-fx-font: italic 11pt 'Arial Black' ;");
+        noteTitleText.setStyle("-fx-font: italic 11pt 'Arial' ;");
         Text noteText = new Text(hashMapOfArticleContent.get("note"));
-        noteText.setStyle("-fx-font: 11pt 'Arial Black'; ");
+        noteText.setStyle("-fx-font: 11pt 'Arial'; ");
         Boolean finalIsOnlineBoolean = isOnlineBoolean;
         buttonAddNote.setOnAction(new EventHandler<ActionEvent>() {
             @Override
