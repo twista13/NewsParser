@@ -547,7 +547,12 @@ public class NewsParser extends Preloader {
         titleListScrollPane.setContent(titlesListVbox);
 
         mainBorderPane.setCenter(new Text("Choose article category from the list"));
-        mainBorderPane.setPrefWidth(960);
+        if (System.getProperty("os.name").toString().contains("Windows")){
+            mainBorderPane.setPrefWidth(948);
+        } else {
+            mainBorderPane.setPrefWidth(960);
+        }
+
         mainBorderPane.setLeft(leftMenuGridPane);
 
         TextFlow archivedNewsTitleTetxFlow = new TextFlow(new Text("Archived news:"));
