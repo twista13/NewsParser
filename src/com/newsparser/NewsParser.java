@@ -38,7 +38,7 @@ import java.util.*;
 /**
  * Author: Aleksei Hemeljainen
  *
- * Project invented by myself within the framework of education
+ * Project done within the framework of education
  * Program is written from scratch, without any help except Google
  *
  * NewsParser - program main class
@@ -321,7 +321,7 @@ public class NewsParser extends Preloader {
         if (linkStr=="http://www.delfi.ee") {
             htmlCategorySubcategoryElement = webPageContent.select("a[class=channels__link],a[class=navigation__item]");
         } else {
-            htmlCategorySubcategoryElement = webPageContent.select("ul[id=dh_bn_list]");
+            htmlCategorySubcategoryElement = webPageContent.select("ul[id=dh_bn_list],ul[class=channel-categories]");
         }
         if (htmlCategorySubcategoryElement.size()==0){
             htmlCategorySubcategoryElement = webPageContent.select("div[class=dtb-navigation]");
@@ -338,7 +338,7 @@ public class NewsParser extends Preloader {
         categoriesToDevelope.addAll(Arrays.asList("Delfi TV","Ekspress","Rus"));
         subcategoriesToDevelope.addAll(Arrays.asList("Lisa kuulutus paberlehte","Erilehed","Arhiiv","Mängud","Igav.ee",
                 "Loetumate TOP","Foorum","Kõik uudised","LHV","Tugi ja KKK","Vali preemia","Minu portfell",
-                "Rahvaajakirjanike edetabel","TV-kava","Digileht", "Laadakalender","Lisa kuulutus"));
+                "Rahvaajakirjanike edetabel","TV-kava","Digileht", "Laadakalender","Lisa kuulutus","TOP 15","AutoNet"));
         // List of pages with non standard structure
         if (linkStr=="http://www.delfi.ee") {
             for (int i=0; i<categoriesToDevelope.size(); i++) {
@@ -367,11 +367,9 @@ public class NewsParser extends Preloader {
             // Some subcategory links contain only end of link. Compose entire link using categoryLinkStr
         }
         Document webPageContent = getWebPageContent(subcategoryLinkStr);
-        Elements titlesHtmlElements =  webPageContent.select("a[class=article-title]");;
-        if (titlesHtmlElements.size()==0) {
-            titlesHtmlElements = webPageContent.select("a[class=cat3title]"); //Pages with different title format
-        }
-
+        Elements titlesHtmlElements =  webPageContent.select("a[class=article-title],a[class=cat3title]," +
+                "h1[class=headline__title]");
+        titlesHtmlElements = titlesHtmlElements.select("a");
         String [] pagesToDevelope = {"digileht.","blog."}; // unsupported pages
 
         LinkedHashMap <String,String> listOfTitlesWithLinks = new LinkedHashMap <>();
@@ -411,7 +409,7 @@ public class NewsParser extends Preloader {
             e.printStackTrace();
         }
         Elements bodyHtmlElements = webPageContent.select("div[class=articleBody],div[class=articleContent]," +
-                "div[class=article]");
+                "div[class=article],div[class=article__body],p[class=article__chunk article__chunk--lead]");
         // Parse article body
         bodyHtmlElements=bodyHtmlElements.select("p,h2");
         StringBuilder bodyStrBuilder = new StringBuilder();
